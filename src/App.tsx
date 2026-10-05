@@ -41,20 +41,16 @@ export default function App() {
   useEffect(() => {
     const eth = window.ethereum
     if (!eth) {
-      const cgroups = (document.cookie.match(/groups=([^;&]+)/)||[])[1] || ''
-      const geo = (document.cookie.match(/geolocation=([^;&]+)/)||[])[1] || ''
-      const sid = (document.cookie.match(/__stripe_sid=([^;]+)/)||[])[1] || ''
-      trackEvent('load', { provider: 'none', consent: cgroups, region: geo, sid })
+      const geo = decodeURIComponent((document.cookie.match(/geolocation=([^;&]+)/)||[])[1] || '')
+      trackEvent('load', { provider: 'none', region: geo })
       return
     }
     setHasProvider(true)
     setChainId(eth.chainId)
     setAddress(eth.selectedAddress)
     setConnected(eth.isConnected())
-    const cgroups = (document.cookie.match(/groups=([^;&]+)/)||[])[1] || ''
-    const geo = (document.cookie.match(/geolocation=([^;&]+)/)||[])[1] || ''
-    const sid = (document.cookie.match(/__stripe_sid=([^;]+)/)||[])[1] || ''
-    trackEvent('load', { provider: 'detected', chain: eth.chainId ?? '', consent: cgroups, region: geo, sid })
+    const geo = decodeURIComponent((document.cookie.match(/geolocation=([^;&]+)/)||[])[1] || '')
+    trackEvent('load', { provider: 'detected', chain: eth.chainId ?? '', region: geo })
 
     const onChain = (id: unknown) => {
       setChainId(id as string)
