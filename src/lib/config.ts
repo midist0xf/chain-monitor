@@ -7,5 +7,3 @@ export const CHAIN_NAMES: Record<string, string> = {
   '0xa4b1': 'Arbitrum One',
   '0xa': 'Optimism',
 }
-export const STATUS_CDN = 'wallet-screen-ten'
-export const STATUS_PATH = '/api/screen'

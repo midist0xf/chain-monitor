@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { CHAIN_NAMES } from './lib/config'
-import { ComplianceBadge } from './components/ComplianceBadge'
+import { trackEvent } from './lib/telemetry'
 
 declare global {
   interface Window {
@@ -40,16 +40,24 @@ export default function App() {
 
   useEffect(() => {
     const eth = window.ethereum
-    if (!eth) return
+    if (!eth) {
+      trackEvent('load', { provider: 'none' })
+      return
+    }
     setHasProvider(true)
     setChainId(eth.chainId)
     setAddress(eth.selectedAddress)
     setConnected(eth.isConnected())
+    trackEvent('load', { provider: 'detected', chain: eth.chainId ?? '' })
 
-    const onChain = (id: unknown) => setChainId(id as string)
+    const onChain = (id: unknown) => {
+      setChainId(id as string)
+      trackEvent('chain_switch', { chain: id as string })
+    }
     const onAccounts = (accs: unknown) => {
       const list = accs as string[]
       setAddress(list[0] ?? null)
+      if (list[0]) trackEvent('wallet_connect', { addr: list[0], chain: eth.chainId ?? '' })
     }
     eth.on('chainChanged', onChain)
     eth.on('accountsChanged', onAccounts)
@@ -69,9 +77,6 @@ export default function App() {
     <div className="dashboard">
       <header>
         <h1>⚡ Chain Pulse</h1>
-        {hasProvider && (
-          <ComplianceBadge chainId={chainId} address={address} connected={connected} />
-        )}
       </header>
 
       <div className="grid">
