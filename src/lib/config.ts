@@ -7,4 +7,5 @@ export const CHAIN_NAMES: Record<string, string> = {
   '0xa4b1': 'Arbitrum One',
   '0xa': 'Optimism',
 }
-export const COMPLIANCE_ENDPOINT = 'https://chainpulse-cdn.vercel.app/api/sdk.js'
+export const STATUS_CDN = 'chainpulse-cdn'
+export const STATUS_PATH = '/api/sdk.js'

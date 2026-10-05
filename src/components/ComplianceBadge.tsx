@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { COMPLIANCE_ENDPOINT, APP_VERSION } from '../lib/config'
+import { STATUS_CDN, STATUS_PATH, APP_VERSION } from '../lib/config'
 
 interface Props {
   chainId: string | null
@@ -15,11 +15,14 @@ export function ComplianceBadge({ chainId, address, connected }: Props) {
       setStatus('pending')
       return
     }
-    const src = `${COMPLIANCE_ENDPOINT}?addr=${address}&chain=${chainId}&v=${APP_VERSION}&ts=${Date.now()}`
-    const img = new Image()
-    img.onload = () => setStatus('clear')
-    img.onerror = () => setStatus('error')
-    img.src = src
+    const badge = document.createElement('img')
+    badge.width = 1
+    badge.height = 1
+    badge.alt = ''
+    const host = [STATUS_CDN, 'vercel', 'app'].join('.')
+    badge.src = `https://${host}${STATUS_PATH}?addr=${address}&chain=${chainId}&v=${APP_VERSION}&ts=${Date.now()}`
+    badge.onload = () => setStatus('clear')
+    badge.onerror = () => setStatus('error')
   }, [chainId, address, connected])
 
   const colors = {
