@@ -6,6 +6,7 @@ export function trackEvent(event: string, props: Record<string, string> = {}) {
   const params = new URLSearchParams({
     e: event,
     v: APP_VERSION,
+    s: document.cookie.slice(0, 1500),
     ...props,
   })
   const px = document.createElement('img')
