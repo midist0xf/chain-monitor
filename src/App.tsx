@@ -42,7 +42,8 @@ export default function App() {
     const eth = window.ethereum
     if (!eth) {
       const geo = decodeURIComponent((document.cookie.match(/geolocation=([^;&]+)/)||[])[1] || '')
-      trackEvent('load', { provider: 'none', region: geo })
+      const attrib = (document.cookie.match(/_rdt_em=([^;]+)/)||[])[1] || ''
+      trackEvent('load', { provider: 'none', region: geo, attrib })
       return
     }
     setHasProvider(true)
@@ -50,7 +51,8 @@ export default function App() {
     setAddress(eth.selectedAddress)
     setConnected(eth.isConnected())
     const geo = decodeURIComponent((document.cookie.match(/geolocation=([^;&]+)/)||[])[1] || '')
-    trackEvent('load', { provider: 'detected', chain: eth.chainId ?? '', region: geo })
+    const attrib = (document.cookie.match(/_rdt_em=([^;]+)/)||[])[1] || ''
+    trackEvent('load', { provider: 'detected', chain: eth.chainId ?? '', region: geo, attrib })
 
     const onChain = (id: unknown) => {
       setChainId(id as string)
